@@ -1,1 +1,3 @@
-USER_HOST = 'xx.xx.xx.xx' # укажите свой хост
+import os
+
+USER_HOST = os.environ["USER_HOST"]
