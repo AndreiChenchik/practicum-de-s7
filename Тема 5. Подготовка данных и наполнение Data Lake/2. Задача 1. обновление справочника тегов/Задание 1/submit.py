@@ -56,7 +56,7 @@ def submit(t_code, rlz_file=''):
 
 if __name__ == '__main__':
     submit(
-        'de07040401',
+        'de07050201',
         'realization.py'
     )
 
