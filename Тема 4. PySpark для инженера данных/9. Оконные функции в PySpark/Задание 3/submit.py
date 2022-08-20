@@ -31,6 +31,9 @@ def submit(t_code, rlz_file=''):
 
     sys.path.append(settings_path)
     u_settings = importlib.import_module('settings')
+    if u_settings.USER_HOST == 'xx.xx.xx.xx':
+        print('\nУкажите в settings.py свой хост\n')
+        return
     USER_HOST = u_settings.USER_HOST
 
     print(f'HOST: {USER_HOST}')
@@ -57,6 +60,6 @@ def submit(t_code, rlz_file=''):
 if __name__ == '__main__':
     submit(
         'de07040903',
-        'realization.py'
+        'realization.txt'
     )
 
