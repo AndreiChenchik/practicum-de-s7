@@ -24,11 +24,16 @@ def main():
 
     events = spark.read.json(f"{base_input_path}/date={date}")
 
-    events.write.option("header", True).partitionBy("event_type").mode(
-        "overwrite"
-    ).parquet(f"{base_output_path}/date={date}")
+    parquet_events = (
+        events.repartition("date", "event_type")
+        .write.option("header", True)
+        .partitionBy("date", "event_type")
+        .mode("overwrite")
+        .parquet("/user/andrei/data/events")
+    )
 
-    events.orderBy(F.desc("event.datetime")).show()
+    latest_events = parquet_events.orderBy(F.desc("event.datetime")).show()
+    print(latest_events)
 
     spark.stop()
 
