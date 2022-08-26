@@ -26,7 +26,7 @@ def main():
     app_name = f"ConnectionInterests-{date_str}-d{days_count}"
     spark = SparkSession.builder.appName(app_name).getOrCreate()
 
-    events = spark.read.parquet(events_path).cache()
+    events = spark.read.parquet(events_path)
     verified_tags = spark.read.parquet(verified_tags_path)
 
     directs = events.filter(
@@ -44,7 +44,7 @@ def main():
         (events.event_type == "message")
         & (events.event.message_channel_to.isNotNull())
         & (events.event.tags.isNotNull())
-    ).cache()
+    )
 
     direct_interests = calculate_direct_interests(directs, reactions, posts)
 
@@ -93,7 +93,7 @@ def calculate_direct_interests(
             )
         )
         .distinct()
-    ).cache()
+    )
 
     connection_circle = connections.select("user_id").distinct()
 
