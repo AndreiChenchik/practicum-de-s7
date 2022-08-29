@@ -150,7 +150,7 @@ def calculate_direct_interests(
         .withColumnRenamed("target_id", "user_id")
     )
 
-    w_user_rank = Window().partitionBy("user_id", "rank")
+    w_user_rank = Window().partitionBy("user_id", "rank").orderBy(F.desc("tag"))
     w_user_rank_tag = Window().partitionBy("user_id", "rank", "tag")
 
     return (
@@ -162,7 +162,8 @@ def calculate_direct_interests(
         )
         .withColumn("cnt", F.count("*").over(w_user_rank_tag))
         .withColumn("max", F.max("cnt").over(w_user_rank))
-        .filter("max = cnt")
+        .withColumn("row", F.row_number().over(w_user_rank))
+        .filter("max = cnt AND row = 1")
         .groupBy("user_id", "rank")
         .agg(F.first("tag").alias("tag"))
         .select(F.col("user_id"), F.col("rank"), F.col("tag"))
